@@ -1,78 +1,83 @@
 # 🏢 Access Control — Reinforcement Learning
 
-This folder is part of the **[Reinforcement-Learning](https://github.com/Meri-07m/Reinforcement-Learning)** repository by **[Meri-07m](https://github.com/Meri-07m)**.  
-It explores **reinforcement learning for resource allocation and queue management**, modeled through the **Access Control Queuing Problem** — a classic example demonstrating how RL can optimize dynamic decision-making under constraints.
+This directory belongs to a broader **Reinforcement Learning** project that focuses on decision-making in constrained environments.  
+Here, we explore the **Access Control Queueing Problem**, a classic RL setting where an agent must intelligently manage limited computational resources.
 
----
+
 
 ## 🌍 Overview
 
-The **Access Control problem** is a reinforcement learning task where an agent must decide whether to **accept or reject incoming requests** for limited system resources.  
-Each request has an associated **priority or reward**, and the system can only handle a certain number of active tasks simultaneously. The objective is to **maximize the long-term average reward** while managing resource capacity efficiently.
+In this task, an incoming stream of requests competes for a restricted pool of resources.  
+Each request carries a **priority level**, and the agent must choose whether to **admit** it or **decline** it.  
+Since the system can only host a limited number of active jobs, the goal is to **maximize cumulative reward** by favoring high-value tasks while maintaining enough free capacity.
 
-This environment highlights **Markov Decision Processes (MDPs)** in practical scheduling and allocation scenarios — similar to real-world applications in **network routing**, **server task scheduling**, and **bandwidth management**.
+This setup represents a practical instance of a **Markov Decision Process (MDP)**, commonly used in domains such as **network traffic allocation**, **server workload management**, and **real-time scheduling**.
 
----
+
 
 ## ⚙️ Problem Description
 
-- The environment consists of a **queue of available resources** (servers, slots, or connections).  
-- At each time step:
-  - A **new request** arrives with a priority level (e.g., 1–4).  
-  - The agent decides whether to **accept** the request (if resources are available) or **reject** it.  
-  - If accepted, the request occupies a slot until it’s released after a random duration.  
-  - Rewards are tied to the accepted request’s priority.  
+- The environment maintains a **fixed set of available processing slots**.
+- During each timestep:
+  - A new job arrives with a priority (typically 1–4).  
+  - The agent must decide to **accept** the job (if enough resources exist) or **reject** it.  
+  - Accepted jobs occupy a slot for several steps before completing.  
+  - Rewards reflect the priority of the accepted job.
 
-The challenge is to **balance acceptance of high-value requests** with **resource availability**, optimizing long-term performance.
+The RL agent must learn how to **prefer valuable jobs** and prevent resource saturation.
 
----
+
 
 ## 🧩 How It Works
 
 1. **State Representation**  
-   The state is typically represented by:
-   - The number of **available resources**.  
-   - The **priority of the incoming request**.  
+   A typical state includes:
+   - Number of currently **free resources**  
+   - The **priority** of the arriving task  
 
-   Example: `(available_servers, request_priority)`
+   Example state: `(free_capacity, incoming_priority)`
 
 2. **Actions**  
-   - `0`: Reject the request.  
-   - `1`: Accept the request (if capacity allows).  
+   - `0` — Reject  
+   - `1` — Accept (if sufficient capacity is available)
 
-3. **Reward Function**  
-   - Reward equals the **priority value** of accepted requests.  
-   - No reward (0) for rejected or impossible actions.
+3. **Reward Structure**  
+   - Accepting → reward = priority  
+   - Rejecting → reward = 0  
 
-4. **Transition Dynamics**  
-   - Accepted requests occupy a server for a random number of steps before freeing it.  
-   - Requests arrive randomly at each step.
+4. **State Transitions**  
+   - Tasks finish at random intervals, freeing resources.  
+   - New requests arrive stochastically at each timestep.
 
-5. **Learning Algorithm**  
-   - Typically solved using **TD control** or **Q-learning**:
-     \[
-     Q(s, a) \leftarrow Q(s, a) + \alpha \big[r + \gamma \max_{a'} Q(s', a') - Q(s, a)\big]
-     \]
-   - The learned policy balances **short-term gain (accepting many requests)** with **long-term reward (saving slots for high-priority tasks)**.
+5. **Learning Method**  
+   The task is often solved with **Q-learning** or other TD-based algorithms:
 
----
+   \[
+   Q(s, a) \leftarrow Q(s, a) + \alpha \left[r + \gamma \max_{a'} Q(s', a') - Q(s, a)\right]
+   \]
+
+   The resulting policy balances **short-term gains** with **long-term capacity planning**.
+
+
 
 ## ⚡ Key Features
 
-- 🧠 **Dynamic Decision-Making**
-  - The agent continuously adapts to resource availability and request patterns.  
-  - Demonstrates learning in stochastic and constrained environments.
+- 🧠 **Adaptive Policy Learning**  
+  The agent evolves its decisions based on observed rewards and environment dynamics.
 
-- 🏗️ **Markov Decision Process Formulation**
-  - Explicit modeling of states, actions, and rewards.  
-  - Captures the essence of **online resource management** problems.
+- 🏗️ **Fully Defined MDP**  
+  Clear specification of states, actions, and rewards typical of resource allocation problems.
 
-- 📊 **Visualization and Performance Metrics**
-  - Track value function convergence.  
-  - Plot learning curves for average reward per episode.  
-  - Compare policies (e.g., greedy vs. learned).  
+- 📊 **Evaluation Tools**  
+  Includes support for plotting reward evolution, value updates, and policy comparison.
 
-- 🔍 **Extendable Design**
-  - Can be extended to continuous state spaces, dynamic request distributions, or function approximation.
+- 🔍 **Highly Customizable**  
+  Easy to extend with:
+  - Additional priority classes  
+  - Alternative arrival models  
+  - Function approximation or neural-network-based methods  
+
+
+
 
 
